@@ -1,0 +1,28 @@
+bool DdLexer::Init(const char* oCheckFile, char* lexPath)
+{	
+	char logPath[_MAX_PATH] = { 0 };
+	char lexFileName[_MAX_PATH] = { 0 };
+	char drive[_MAX_DRIVE];
+	char dir[_MAX_DIR];
+	char fname[_MAX_FNAME];
+	char ext[_MAX_EXT];
+	SYSTEMTIME st = { 0 };
+	GetLocalTime(&st);
+	char ttmp[17] = { 0 };
+	//sprintf_s(ttmp, "LOG\\%4d-%02d-%02d",
+	sprintf_s(ttmp, "LOG\\%4d-%02d-00",
+			  st.wYear,
+			  st.wMonth,
+			  st.wDay);
+
+	_splitpath_s(oCheckFile, drive, dir, fname, ext);
+	_makepath_s(lexFileName, drive, dir, "LEXER", "CARD");
+	_makepath_s(logPath, drive, dir, ttmp, "log");
+	
+	if (!mgLog.Start(logPath)){
+		return false;
+	}
+
+	memcpy(lexPath, lexFileName, _MAX_PATH);
+	return true;
+}
